@@ -1,0 +1,52 @@
+class Solution {
+    public ListNode reverseKGroup(ListNode head, int k) {
+
+        //approach: brute force - reverse k nodes at a time, linear iteration
+        // 1) add a dummy node, dummy.next=head, pointer temp points to dummy node
+                    // what we plan to do is to reverse the pointer from k node -> start
+                    // normally, 2 -> 3 now, we use a temp variable which points 2 -> temp 
+                    // after making 2 -> 1 now we finish by 1 -> temp
+        // that's how you reverse a list node
+        
+        int len = 0;
+        ListNode dummy = new ListNode();
+        dummy.next = head;
+
+        ListNode temp = dummy;
+        // finding the length of the linkedList
+        while(temp.next!=null){
+            len++;
+            temp = temp.next;
+        }
+        
+        // again intializing the temp to the dummy, since it is now at the end
+        temp = dummy;
+
+        while(temp.next!=null){
+            //base condition
+            if(len<k) break;
+            int count = k-1;          // for looping through the LL
+            ListNode tempnext = temp.next;
+            ListNode first = temp.next;
+            ListNode second = first.next;
+
+            // run loop for reversing the k length list of LL
+            while(count-- > 0){
+                ListNode nex = second.next;
+                second.next = first;
+                first = second;
+                second = nex;
+            }
+            len = len - k;      // Decrementing the lenght as well (for base condition)
+
+            temp.next = first;
+            tempnext.next = second;
+            temp = tempnext;
+
+        }
+
+        return dummy.next;      //we haven't changed the dummy position so return it
+   
+
+    }
+}
