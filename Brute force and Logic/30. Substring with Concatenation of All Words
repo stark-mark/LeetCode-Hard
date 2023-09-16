@@ -1,0 +1,44 @@
+class Solution {
+    public List<Integer> findSubstring(String s, String[] words) {
+        // approach: sliding window + 2 map
+      
+        // store the array -> hashmap
+        HashMap<String, Integer> map=new HashMap<>();
+        List<Integer> list=new ArrayList<>();
+        for(int i=0; i<words.length; i++){
+           map.put(words[i], map.getOrDefault(words[i],0)+1);
+        }
+         
+        int totallength = words[0].length()*words.length;
+        int wordlength = words[0].length();
+        int start=0; int end=0;
+
+        while(end<s.length()){
+            if(end-start+1==totallength){
+               
+               // take a substring of total possible length
+               String bigsub= s.substring(start, end+1);
+               HashMap<String, Integer> map2=new HashMap<>();
+               int p=0;
+               // divide the big substring into smaller based on word length 
+               // and store it in another map
+               while(p<bigsub.length()){
+                   String smallsub= bigsub.substring(p,p+wordlength);
+                   map2.put(smallsub, map2.getOrDefault(smallsub,0)+1);
+                   p+=wordlength;
+               }
+               // check if both the maps are same
+               if(map.equals(map2)){
+                   list.add(start);
+               }
+               // if same it will store the integer value in list and come here
+               // if not same it will still come here and increase the start index
+               start++;
+            }
+            // initially increase the end index to totallength-1
+            // after that we increase both start and end by 1
+            end++;
+        } 
+        return list;
+    }
+}
