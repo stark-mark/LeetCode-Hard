@@ -1,0 +1,81 @@
+class Solution {
+    //approach: DFS + Backtracking using Recursion
+    //vetri vel muruga, god give me everything, i am gonna smash your buy guys
+
+    public char[][] board;
+
+    public void solveSudoku(char[][] board) {
+        this.board=board;
+        sudokusolver(0, 0);
+    }
+
+    public boolean sudokusolver(int row, int col){
+        //once you reach the end of the row, start next row
+        if(col==9){
+            row+=1; col=0;
+        }
+        //once you reach the end of the board, finish !!!
+        if(row==9){
+            return true;
+        }
+        //if number already present, move to next cell recursively
+        if(board[row][col]!='.'){
+            return sudokusolver(row, col+1);
+        }
+        //DFS for all valid options
+        for(char i='1'; i<='9'; i++){
+            //if the number already exists continue, else place it
+            if(!isValid(row, col, i)){
+               continue;
+            }
+            board[row][col]=i;
+
+            //DFS for next cell: if true then return true, otherwise unchoose the decision that we made and iterate the remaining cells and return false
+            if(sudokusolver(row, col+1)==true){
+                return true;
+            }
+            board[row][col]='.';
+        }
+        return false;
+    }
+
+    private boolean isValid(int row, int col, char current){
+        //check same row and col (1)
+        for(int i=0;i<9;i++){
+            if(board[row][i]==current){
+                return false;
+            }
+            if(board[i][col]==current){
+                return false;
+            }
+        }
+        //check same sub-box (2)
+        int[] rowlimit= checkSubBoxBoundaries(row);
+        int[] collimit= checkSubBoxBoundaries(col);
+
+        for(int i=rowlimit[0]; i<=rowlimit[1]; i++){
+            for(int j=collimit[0]; j<=collimit[1]; j++){
+                if(board[i][j]==current){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    private int[] checkSubBoxBoundaries(int val){
+        int[] res=new int[2];
+        if(val<3){
+            res[0]=0;
+            res[1]=2;
+        }
+        else if(val<6){
+            res[0]=3;
+            res[1]=5;
+        }
+        else if(val<9){
+            res[0]=6;
+            res[1]=8;
+        }
+        return res;
+    }
+}
